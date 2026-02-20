@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "140928556614",
+    "project_id": "zokua-2e6d0",
+    "storage_bucket": "zokua-2e6d0.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:140928556614:android:f4d0d57fa726ff28f33447",
+        "android_client_info": {
+          "package_name": "com.example.gosshiping"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA3oKZnTheLndmhnt31uqFYBzE5qXtTTgc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
