@@ -14,6 +14,7 @@ void main() async{
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
   
+  
 
   // This widget is the root of your application.
   @override
@@ -24,6 +25,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         fontFamily: GoogleFonts.ibmPlexSans().fontFamily,
         primarySwatch: Colors.indigo,
+       
       ),
       home: FirebaseAuth.instance.currentUser == null 
       ? const LoginPage ()
