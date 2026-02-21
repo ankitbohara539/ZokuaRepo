@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:gosshiping/ui/auth.dart';
 
 void main() async{
@@ -10,17 +11,19 @@ void main() async{
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
+  
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Zokua ',
       theme: ThemeData(
-      
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        fontFamily: GoogleFonts.ibmPlexSans().fontFamily,
+        primarySwatch: Colors.indigo,
       ),
-      home: SignUp(),
+      home: const SignUp(),
     );
   }
 }
