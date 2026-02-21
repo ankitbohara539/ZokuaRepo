@@ -1,7 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:gosshiping/ui/auth.dart';
+import 'package:gosshiping/ui/auth/login.dart';
+import 'package:gosshiping/ui/home/home.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,7 +25,9 @@ class MyApp extends StatelessWidget {
         fontFamily: GoogleFonts.ibmPlexSans().fontFamily,
         primarySwatch: Colors.indigo,
       ),
-      home: const SignUp(),
+      home: FirebaseAuth.instance.currentUser == null 
+      ? const LoginPage ()
+      : const HomePage(),
     );
   }
 }
