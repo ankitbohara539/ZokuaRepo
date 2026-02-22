@@ -40,7 +40,6 @@ dependencies:
   firebase_analytics: ^12.1.2
   firebase_auth: ^6.1.4
   firebase_core: ^4.4.0
-  form_validation: ^3.2.0
   google_fonts: ^8.0.2
   form_validator: ^2.1.1
 

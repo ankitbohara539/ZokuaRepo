@@ -125,6 +125,9 @@ class _LoginPageState extends State<LoginPage> {
                             if (e.code == 'wrong-password') {
                               print('The password wrong');
                             }
+                            if (e.code == 'user-not-found') {
+                              print('The user not found');
+                            }
                           } catch (e) {
                             print("Error: $e");
                           }

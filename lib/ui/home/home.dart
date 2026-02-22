@@ -14,7 +14,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Zokua Home"),
+        title: const Text("Zokua..."),
       ),
      drawer: Drawer(
         child: ListView(
@@ -22,10 +22,10 @@ class _HomePageState extends State<HomePage> {
           children: [
             const DrawerHeader(
               decoration: BoxDecoration(
-                color: Colors.indigo,
+                color: Colors.blueAccent,
               ),
               child: Text(
-                'Zokua Chat',
+                'ぞくわ',
                 style: TextStyle(color: Colors.white, fontSize: 24),
               ),
             ),
