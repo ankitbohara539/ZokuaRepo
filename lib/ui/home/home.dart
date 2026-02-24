@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gosshiping/ui/auth/login.dart';
+import 'package:gosshiping/ui/home/search.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -15,7 +16,20 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Zokua..."),
+        actions: [
+            IconButton(
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => const SearchPage(),
+                  ),
+                );
+              },
+              icon: const Icon(Icons.search),
+            ),
+        ],
       ),
+  
+
      drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
