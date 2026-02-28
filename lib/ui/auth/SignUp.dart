@@ -26,6 +26,7 @@ class _SignUpState extends State<SignUp> {
   String? password;
 
   bool _isLoading = false;
+  bool _obscurePassword = true;
 
   @override
   void dispose() {
@@ -55,12 +56,17 @@ class _SignUpState extends State<SignUp> {
         throw Exception("User creation failed");
       }
 
-      await _firestore.collection('users').doc(user.uid).set({
-        "uid": user.uid,
-        "username": username!.trim(),
-        "email": email!.trim(),
-        "createdAt": FieldValue.serverTimestamp(),
-      });
+      await FirebaseFirestore.instance
+          .collection("users")
+          .doc(userCredential.user!.uid)
+          .set({
+            "uid": userCredential.user!.uid,
+            "username": username,
+            "usernameLower": username!.trim().toLowerCase(), 
+            "email": email,
+            "createdAt": FieldValue.serverTimestamp(),
+          });
+    
 
       if (!mounted) return;
 
@@ -91,124 +97,161 @@ class _SignUpState extends State<SignUp> {
 
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
-        backgroundColor: Colors.grey.shade50,
+        backgroundColor: scheme.surface,
         body: SafeArea(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  const SizedBox(height: 60),
-
-                  const Text(
-                    "Zokua Chat",
-                    textAlign: TextAlign.center,
-                    style:
-                        TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+            child: Column(
+              children: [
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.fromLTRB(20, 26, 20, 26),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: isDark
+                          ? [const Color(0xFF111827), const Color(0xFF1E293B)]
+                          : [const Color(0xFF0284C7), const Color(0xFF06B6D4)],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    borderRadius: BorderRadius.circular(24),
                   ),
-
-                  const SizedBox(height: 8),
-
-                  Text(
-                    "Join the conversation",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.grey.shade600),
-                  ),
-
-                  const SizedBox(height: 40),
-
-                  /// USERNAME
-                  TextFormField(
-                    focusNode: _usernameFocus,
-                    textInputAction: TextInputAction.next,
-                    onFieldSubmitted: (_) =>
-                        FocusScope.of(context).requestFocus(_emailFocus),
-                    decoration: _inputDecoration("Username"),
-                    validator: ValidationBuilder()
-                        .required()
-                        .minLength(5)
-                        .maxLength(20)
-                        .build(),
-                    onSaved: (value) => username = value,
-                  ),
-
-                  const SizedBox(height: 16),
-
-                  /// EMAIL
-                  TextFormField(
-                    focusNode: _emailFocus,
-                    keyboardType: TextInputType.emailAddress,
-                    textInputAction: TextInputAction.next,
-                    onFieldSubmitted: (_) =>
-                        FocusScope.of(context).requestFocus(_passwordFocus),
-                    decoration: _inputDecoration("Email"),
-                    validator: ValidationBuilder()
-                        .required()
-                        .email()
-                        .maxLength(50)
-                        .build(),
-                    onSaved: (value) => email = value,
-                  ),
-
-                  const SizedBox(height: 16),
-
-                  /// PASSWORD
-                  TextFormField(
-                    focusNode: _passwordFocus,
-                    obscureText: true,
-                    textInputAction: TextInputAction.done,
-                    decoration: _inputDecoration("Password"),
-                    validator: ValidationBuilder()
-                        .required()
-                        .minLength(6)
-                        .maxLength(20)
-                        .build(),
-                    onSaved: (value) => password = value,
-                  ),
-
-                  const SizedBox(height: 28),
-
-                  SizedBox(
-                    height: 52,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.black,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(14),
+                  child: Column(
+                    children: const [
+                      Icon(Icons.groups_rounded, color: Colors.white, size: 34),
+                      SizedBox(height: 10),
+                      Text(
+                        "Create your gossip circle",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 24,
+                          fontWeight: FontWeight.w700,
                         ),
                       ),
-                      onPressed: _isLoading ? null : _handleSignUp,
-                      child: _isLoading
-                          ? const CircularProgressIndicator(
-                              color: Colors.white,
-                            )
-                          : const Text(
-                              "Sign Up",
-                              style: TextStyle(
-                                  fontSize: 16, color: Colors.white),
-                            ),
-                    ),
-                  ),
-
-                  const SizedBox(height: 40),
-
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text("Already have an account?"),
-                      TextButton(
-                        onPressed: () => Navigator.of(context).pop(),
-                        child: const Text("Login"),
+                      SizedBox(height: 6),
+                      Text(
+                        "Join Zokua and start chatting with friends instantly.",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: Colors.white70),
                       ),
                     ],
                   ),
-                ],
-              ),
+                ),
+                const SizedBox(height: 18),
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: scheme.surfaceContainerLowest,
+                    borderRadius: BorderRadius.circular(22),
+                    border: Border.all(color: scheme.outlineVariant),
+                  ),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Text(
+                          "New account",
+                          style: TextStyle(
+                            color: scheme.onSurface,
+                            fontWeight: FontWeight.w700,
+                            fontSize: 22,
+                          ),
+                        ),
+                        const SizedBox(height: 18),
+                        TextFormField(
+                          focusNode: _usernameFocus,
+                          textInputAction: TextInputAction.next,
+                          onFieldSubmitted: (_) =>
+                              FocusScope.of(context).requestFocus(_emailFocus),
+                          decoration: _inputDecoration(
+                            context: context,
+                            label: "Username",
+                            icon: Icons.person_outline_rounded,
+                          ),
+                          validator: ValidationBuilder().required().minLength(5).maxLength(20).build(),
+                          onSaved: (value) => username = value,
+                        ),
+                        const SizedBox(height: 14),
+                        TextFormField(
+                          focusNode: _emailFocus,
+                          keyboardType: TextInputType.emailAddress,
+                          textInputAction: TextInputAction.next,
+                          onFieldSubmitted: (_) =>
+                              FocusScope.of(context).requestFocus(_passwordFocus),
+                          decoration: _inputDecoration(
+                            context: context,
+                            label: "Email",
+                            icon: Icons.mail_outline_rounded,
+                          ),
+                          validator: ValidationBuilder().required().email().maxLength(50).build(),
+                          onSaved: (value) => email = value,
+                        ),
+                        const SizedBox(height: 14),
+                        TextFormField(
+                          focusNode: _passwordFocus,
+                          obscureText: _obscurePassword,
+                          textInputAction: TextInputAction.done,
+                          onFieldSubmitted: (_) => _handleSignUp(),
+                          decoration: _inputDecoration(
+                            context: context,
+                            label: "Password",
+                            icon: Icons.lock_outline_rounded,
+                            suffix: IconButton(
+                              onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
+                              icon: Icon(
+                                _obscurePassword
+                                    ? Icons.visibility_off_rounded
+                                    : Icons.visibility_rounded,
+                              ),
+                            )
+                          ),
+                          validator: ValidationBuilder().required().minLength(6).maxLength(20).build(),
+                          onSaved: (value) => password = value,
+                        ),
+                        const SizedBox(height: 20),
+                        SizedBox(
+                          height: 52,
+                          child: FilledButton(
+                            onPressed: _isLoading ? null : _handleSignUp,
+                            style: FilledButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(14),
+                              ),
+                            ),
+                            child: _isLoading
+                                ? const SizedBox(
+                                    width: 20,
+                                    height: 20,
+                                    child: CircularProgressIndicator(strokeWidth: 2),
+                                  )
+                                : const Text("Sign Up"),
+                          ),
+                        ),
+                        const SizedBox(height: 18),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Text("Already have an account?"),
+                            TextButton(
+                              onPressed: () => Navigator.of(context).pop(),
+                              child: const Text("Login"),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ),
@@ -216,24 +259,31 @@ class _SignUpState extends State<SignUp> {
     );
   }
 
-  InputDecoration _inputDecoration(String label) {
+  InputDecoration _inputDecoration({
+    required BuildContext context,
+    required String label,
+    required IconData icon,
+    Widget? suffix,
+  }) {
+    final scheme = Theme.of(context).colorScheme;
+
     return InputDecoration(
       labelText: label,
       filled: true,
-      fillColor: Colors.white,
-      contentPadding:
-          const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
+      fillColor: scheme.surfaceContainerHigh,
+      prefixIcon: Icon(icon),
+      suffixIcon: suffix,
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(14),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(14),
-        borderSide: BorderSide(color: Colors.grey.shade300),
+        borderSide: BorderSide(color: scheme.outlineVariant),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(14),
-        borderSide:
-            const BorderSide(color: Colors.black, width: 1.5),
+        borderSide: BorderSide(color: scheme.primary, width: 1.4),
       ),
     );
   }
